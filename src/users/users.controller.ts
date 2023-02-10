@@ -18,7 +18,7 @@ export class UsersController {
         return this.userService.getUsers();
     }
     @Get('/:id')
-    async getUser(@Param('id', ParseIntPipe) id:number): Promise<User> {
+    async getUser(@Param('id', ParseIntPipe) id:number): Promise<any> {
         return this.userService.getUser(id);
     }
     @Delete('/:id')
@@ -27,7 +27,7 @@ export class UsersController {
     }
     @Put('/:id')
     async updateUser(@Param('id', ParseIntPipe) id:number,@Body() user: UpdateuserDto,) {
-        return this.userService.deleteUser(id, user);
+        return this.userService.updateUser(id, user);
     }
 
 
