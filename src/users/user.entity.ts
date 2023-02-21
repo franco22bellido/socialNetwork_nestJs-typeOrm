@@ -1,5 +1,8 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn} from 'typeorm';
-import { Profile } from './profile.entity';
+import { Comment } from 'src/comments/comment.entity';
+import { Follower } from 'src/followers/services/follower.entity';
+import { Post } from 'src/posts/post.entity';
+import {Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, OneToMany} from 'typeorm';
+import { Muchos } from './muchos.entity';
 
 @Entity({name: 'users'})
 export class User {
@@ -16,10 +19,18 @@ export class User {
     @Column({ type : 'datetime', default: ()=> 'CURRENT_TIMESTAMP'})
     createdAt: Date;
 
-    @Column({nullable: true})
-    authStrategy: string;
 
-    @OneToOne(()=> Profile)
-    @JoinColumn()
-    profile: Profile
+    @OneToMany(()=> Post, post => post.author)
+    posts: Post[]
+
+    @OneToMany(()=>Follower, follower => follower.follower)
+    followers: Follower[]
+    @OneToMany(()=>Follower, follower => follower.idol)
+    idols: Follower[]
+
+    @OneToMany(()=> Muchos, muchos => muchos.userId)
+    muchos: Muchos[];
+
+    @OneToMany(()=> Comment, comment => comment.user)
+    comments: Comment[]
 }

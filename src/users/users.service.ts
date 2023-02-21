@@ -6,7 +6,8 @@ import { UpdateuserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import { HttpException } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
-import { Profile } from './profile.entity';
+import { Muchos } from './muchos.entity';
+
 
 @Injectable()
 export class UsersService {
@@ -14,9 +15,13 @@ export class UsersService {
 
     constructor(
       @InjectRepository(User) private userRepository: Repository<User>,
-      @InjectRepository(Profile) private profileRepository: Repository<Profile>){    
-    }
+      @InjectRepository(Muchos) private muchosRepository: Repository<Muchos>
+      ){}
     
+    async getMuchos (){
+      const muchos = await this.muchosRepository.find({relations: {user: true}});
+      return muchos;
+    }
     async createUser (user: CreateUserDto): Promise<any>{
       const userFound = await this.userRepository.findOne({
         where: {username: user.username}
@@ -55,22 +60,11 @@ export class UsersService {
     if(!userFound){
       return new HttpException('user not found', HttpStatus.NOT_FOUND);
     };
-        const userUpdated = Object.assign(userFound, user);
-        return this.userRepository.save(userUpdated);
-        // return this.userRepository.update({id}, user);
+      const userUpdated = Object.assign(userFound, user);
+      return this.userRepository.save(userUpdated);
    }
 
-   async createProfile(id: number, profile: CreateProfileDto){
+ 
 
-    const userFound = await this.userRepository.findOne({where: {id}});
 
-    if(!userFound){
-      return new HttpException('user not found', HttpStatus.NOT_FOUND);
-      
-    }
-     const newProfile = this.profileRepository.create(profile);
-     const savedProfile = await this.profileRepository.save(newProfile);
-     userFound.profile = savedProfile;
-     return this.userRepository.save(userFound);
-   }
 }
