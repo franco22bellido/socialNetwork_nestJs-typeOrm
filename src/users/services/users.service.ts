@@ -1,16 +1,16 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import {InjectRepository} from  '@nestjs/typeorm'
 import {Repository} from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateuserDto } from './dto/update-user.dto';
-import { User } from './user.entity';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateuserDto } from '../dto/update-user.dto';
+import { User } from '../user.entity';
 import { HttpException } from '@nestjs/common';
-import { CreateProfileDto } from './dto/create-profile.dto';
-import { Muchos } from './muchos.entity';
+import { Muchos } from '../muchos.entity';
+import { IUsersService } from './Iusers.service';
 
 
 @Injectable()
-export class UsersService {
+export class UsersService implements IUsersService{
 
 
     constructor(
@@ -19,8 +19,7 @@ export class UsersService {
       ){}
     
     async getMuchos (){
-      const muchos = await this.muchosRepository.find({relations: {user: true}});
-      return muchos;
+     return console.log("gaodifas");
     }
     async createUser (user: CreateUserDto): Promise<any>{
       const userFound = await this.userRepository.findOne({

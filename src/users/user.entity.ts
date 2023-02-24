@@ -1,5 +1,6 @@
 import { Comment } from 'src/comments/comment.entity';
-import { Follower } from 'src/followers/services/follower.entity';
+import { Follower } from 'src/followers/follower.entity';
+import { Like } from 'src/likes/entities/like.entity';
 import { Post } from 'src/posts/post.entity';
 import {Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, OneToMany} from 'typeorm';
 import { Muchos } from './muchos.entity';
@@ -33,4 +34,7 @@ export class User {
 
     @OneToMany(()=> Comment, comment => comment.user)
     comments: Comment[]
+
+    @OneToMany(()=>Like, like =>like.user)
+    likes: Like[]
 }

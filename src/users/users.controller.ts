@@ -1,13 +1,13 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import {CreateUserDto} from './dto/create-user.dto'
 import { UpdateuserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
-import { UsersService } from './users.service';
+import { IUsersService } from './services/Iusers.service';
 
 @Controller('users')
 export class UsersController {
 
-    constructor (private userService: UsersService){}
+    constructor (@Inject('IUsersService') private userService: IUsersService){}
 
     @Get('/geter')
     getTodos() {
