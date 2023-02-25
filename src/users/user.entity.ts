@@ -3,7 +3,6 @@ import { Follower } from 'src/followers/follower.entity';
 import { Like } from 'src/likes/entities/like.entity';
 import { Post } from 'src/posts/post.entity';
 import {Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, OneToMany} from 'typeorm';
-import { Muchos } from './muchos.entity';
 
 @Entity({name: 'users'})
 export class User {
@@ -28,9 +27,6 @@ export class User {
     followers: Follower[]
     @OneToMany(()=>Follower, follower => follower.idol)
     idols: Follower[]
-
-    @OneToMany(()=> Muchos, muchos => muchos.userId)
-    muchos: Muchos[];
 
     @OneToMany(()=> Comment, comment => comment.user)
     comments: Comment[]

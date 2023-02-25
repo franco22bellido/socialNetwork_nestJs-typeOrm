@@ -14,13 +14,13 @@ export class PostsService implements IPostService{
 
     constructor(
         @InjectRepository(Post) private postRepository: Repository<Post>,
-        @InjectRepository(User) private userRepository: Repository<User>
     ){}
+    //a arreglar
     async createPost(post: CreatePostDto): Promise<any> {
-            const userFound: User = await this.userRepository.findOne({where: {id: post.authorId}});
-            if(!userFound){
-                return new HttpException('user not found', HttpStatus.NOT_FOUND);
-            };
+            // const userFound: User = await this.userRepository.findOne({where: {id: post.authorId}});
+            // if(!userFound){
+            //     return new HttpException('user not found', HttpStatus.NOT_FOUND);
+            // };
             const newPost = this.postRepository.create(post);
             return this.postRepository.save(newPost);
     }

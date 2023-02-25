@@ -5,7 +5,6 @@ import { User } from 'src/users/user.entity';
 import { Follower } from './follower.entity';
 import { FollowersController } from './followers.controller';
 import { FollowersService } from './services/followers.service';
-import { Muchos } from 'src/users/muchos.entity';
 import { Comment } from 'src/comments/comment.entity';
 import { Like } from 'typeorm';
 

@@ -8,12 +8,11 @@ import { PostsModule } from './posts/posts.module';
 import { FollowersModule } from './followers/followers.module';
 import { Follower } from './followers/follower.entity';
 import { Post } from './posts/post.entity';
-import { Muchos } from './users/muchos.entity';
 import { CommentsModule } from './comments/comments.module';
 import { Comment } from './comments/comment.entity';
-import { LikesService } from './likes/services/likes.service';
 import { LikesModule } from './likes/likes.module';
 import { Like } from './likes/entities/like.entity';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -25,7 +24,7 @@ import { Like } from './likes/entities/like.entity';
       username: 'root',
       password: 'Ironman312345aAA',
       database: 'nestdb',
-      entities: [User, Follower, Post,Muchos, Comment, Like],
+      entities: [User, Follower, Post, Comment, Like],
       synchronize: true
     }),
     UsersModule,
@@ -33,6 +32,7 @@ import { Like } from './likes/entities/like.entity';
     FollowersModule,
     CommentsModule,
     LikesModule,
+    AuthModule,
     ],
   controllers: [AppController],
   providers: [AppService],

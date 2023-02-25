@@ -1,25 +1,44 @@
-import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, ParseIntPipe, Post, Put, Req, UseGuards } from '@nestjs/common';
 import {CreateUserDto} from './dto/create-user.dto'
 import { UpdateuserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import { IUsersService } from './services/Iusers.service';
+import {compare} from 'bcrypt';
+import { JwtService } from '@nestjs/jwt/dist';
+import { jwtAuthGuard } from './auth/jwt-auth.guard';
+
+
 
 @Controller('users')
 export class UsersController {
 
-    constructor (@Inject('IUsersService') private userService: IUsersService){}
+    constructor (@Inject('IUsersService') private userService: IUsersService,
+    private jwtService: JwtService){}
 
-    @Get('/geter')
-    getTodos() {
-        return this.userService.getMuchos();
-    }
 
-    @Post()
-    createUser(@Body() newUser: CreateUserDto){
+    @Post('/register')
+    async createUser(@Body() newUser: CreateUserDto){
+        const user:User  = await this.userService.getUserByUsername(newUser.username);
+        if(user) throw new HttpException('user already created', HttpStatus.CONFLICT);
         return this.userService.createUser(newUser);
     }
+    @Post('/login')
+    async loginUser(@Body() userLogin: CreateUserDto){
+        const userFound:User = await this.userService.getUserByUsername(userLogin.username);
+        if(!userFound) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+        const checkPassword = await compare(userLogin.password, userFound.password);
+        if(!checkPassword) throw new HttpException("password no valid", 403);
+
+        const payload: {} = {id: userFound.id, username: userFound.username};
+        const token = this.jwtService.sign(payload);
+        const data = {userFound, token}
+        return data;
+    }
+
+    @UseGuards(jwtAuthGuard)
     @Get()
-    async getUsers(): Promise<User[]> {
+    async getUsers(@Req() req: any): Promise<User[]> {
+        console.log(req.user.id);
         return this.userService.getUsers();
     }
     @Get('/:id')

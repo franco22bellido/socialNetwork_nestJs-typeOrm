@@ -22,7 +22,6 @@ export class CommentsService implements ICommentsService{
         const coments = await this.commentsRepository.find({
             // relations: {user: true},
             where: {userId}});
-
         return coments;
     }
     async getCommentsPost(postId: number): Promise<Comment[]> {
