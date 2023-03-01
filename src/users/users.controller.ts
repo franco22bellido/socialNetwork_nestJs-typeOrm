@@ -3,9 +3,8 @@ import {CreateUserDto} from './dto/create-user.dto'
 import { UpdateuserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import { IUsersService } from './services/Iusers.service';
-import {compare} from 'bcrypt';
-import { JwtService } from '@nestjs/jwt/dist';
-import { jwtAuthGuard } from './auth/jwt-auth.guard';
+import { jwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
+import { IAuthService } from 'src/auth/services/Iauth.service';
 
 
 
@@ -13,7 +12,7 @@ import { jwtAuthGuard } from './auth/jwt-auth.guard';
 export class UsersController {
 
     constructor (@Inject('IUsersService') private userService: IUsersService,
-    private jwtService: JwtService){}
+    @Inject('IAuthService') private authService: IAuthService){}
 
 
     @Post('/register')
@@ -26,19 +25,17 @@ export class UsersController {
     async loginUser(@Body() userLogin: CreateUserDto){
         const userFound:User = await this.userService.getUserByUsername(userLogin.username);
         if(!userFound) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-        const checkPassword = await compare(userLogin.password, userFound.password);
+        const checkPassword = await this.authService.comparePassword(userLogin.password, userFound.password);
         if(!checkPassword) throw new HttpException("password no valid", 403);
 
-        const payload: {} = {id: userFound.id, username: userFound.username};
-        const token = this.jwtService.sign(payload);
-        const data = {userFound, token}
-        return data;
+        
+        const token  = await this.authService.login(userFound);
+        return {userFound, token}
     }
 
     @UseGuards(jwtAuthGuard)
     @Get()
     async getUsers(@Req() req: any): Promise<User[]> {
-        console.log(req.user.id);
         return this.userService.getUsers();
     }
     @Get('/:id')

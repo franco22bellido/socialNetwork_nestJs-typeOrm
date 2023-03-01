@@ -30,30 +30,15 @@ export class CommentsService implements ICommentsService{
             where: {postId}});
         return coments;
     }
-    async updateComment(text: string, commentId:number): Promise<any> {
-        let comment = await this.commentsRepository.findOne({where: {id: commentId}});
-        comment.text = text;
-        return await this.commentsRepository.save(comment);
+    async updateComment(text: string, commentId:number): Promise<any> { 
+        // return await this.commentsRepository.update({id: commentId, userId}, {text});
+        return await this.commentsRepository.save({id: commentId, text});
     }
     async deleteComment(commentId: number, userId: number): Promise<any> {
         return await this.commentsRepository.delete({id: commentId, userId});
+    }
+
+    async getComment(commentId: number): Promise<Comment> {
+        return this.commentsRepository.findOne({where: {id: commentId}});
     }   
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

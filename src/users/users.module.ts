@@ -9,7 +9,8 @@ import { Follower } from 'src/followers/follower.entity';
 import { Comment } from 'src/comments/comment.entity';
 import { Like } from 'src/likes/entities/like.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './auth/jwt.strategy';
+import { JwtStrategy } from '../auth/jwt/jwt.strategy';
+import { AuthService } from 'src/auth/services/auth.service';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
   ,
   PostsModule],
   controllers: [UsersController],
-  providers: [{provide: "IUsersService", useClass: UsersService}, JwtStrategy]
+  providers: [{provide: "IUsersService", useClass: UsersService},
+              {provide: 'IAuthService', useClass: AuthService}]
 })
 export class UsersModule {}

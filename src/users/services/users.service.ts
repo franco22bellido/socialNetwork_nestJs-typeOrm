@@ -31,7 +31,7 @@ export class UsersService implements IUsersService{
       return await this.userRepository.save(newUser);
     }
 
-    //a prueba
+    //a prueba, esto no sirve
     async login(user: CreateUserDto): Promise<any>{
       const userFound = await this.getUserByUsername(user.username);
     }
